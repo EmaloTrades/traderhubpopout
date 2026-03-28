@@ -20,9 +20,11 @@
   "build": {
     "appId": "com.traderhub.popout",
     "productName": "Trader Hub Pop-Out Checklist",
+    "forceCodeSigning": false,
     "win": {
       "target": "portable",
-      "icon": "icon.ico"
+      "icon": "icon.ico",
+      "signAndEditExecutable": false
     },
     "files": [
       "main.js",

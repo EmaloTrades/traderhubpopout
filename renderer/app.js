@@ -10,7 +10,41 @@ window.electronAPI.onAlwaysOnTopChanged((isOnTop) => {
   btn.title = isOnTop ? 'Always on top (active)' : 'Click to pin on top';
 });
 
-// ── WebSocket connection to Trader Hub browser tab ──
+// ══════════════════════════════════════════════════════
+// Window Controls
+// ══════════════════════════════════════════════════════
+document.getElementById('poPin').addEventListener('click', () => {
+  window.electronAPI.toggleAlwaysOnTop();
+});
+document.getElementById('poMinimize').addEventListener('click', () => {
+  window.electronAPI.minimize();
+});
+document.getElementById('poClose').addEventListener('click', () => {
+  window.electronAPI.close();
+});
+
+// ══════════════════════════════════════════════════════
+// Settings Cog + Opacity
+// ══════════════════════════════════════════════════════
+const settingsBtn = document.getElementById('poSettingsBtn');
+const settingsPanel = document.getElementById('poSettings');
+const opacitySlider = document.getElementById('poOpacity');
+const opacityVal = document.getElementById('poOpacityVal');
+
+settingsBtn.addEventListener('click', () => {
+  const open = settingsPanel.classList.toggle('open');
+  settingsBtn.classList.toggle('active', open);
+});
+
+opacitySlider.addEventListener('input', () => {
+  const pct = parseInt(opacitySlider.value);
+  opacityVal.textContent = pct + '%';
+  window.electronAPI.setOpacity(pct / 100);
+});
+
+// ══════════════════════════════════════════════════════
+// WebSocket connection to Trader Hub browser tab
+// ══════════════════════════════════════════════════════
 let ws = null;
 let reconnectTimer = null;
 const WS_URL = 'ws://127.0.0.1:19384';
@@ -27,7 +61,6 @@ function connectWS() {
 
   ws.onopen = () => {
     updateConnectionStatus(true);
-    // Request full state from browser
     sendMessage({ type: 'popout-ready' });
   };
 
@@ -42,9 +75,7 @@ function connectWS() {
     scheduleReconnect();
   };
 
-  ws.onerror = () => {
-    // onclose will fire after this
-  };
+  ws.onerror = () => {};
 }
 
 function scheduleReconnect() {
@@ -56,11 +87,9 @@ function scheduleReconnect() {
 }
 
 function sendMessage(msg) {
-  // Send via WebSocket (to browser)
   if (ws && ws.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify(msg));
   }
-  // Also send via IPC (main process can relay)
   window.electronAPI.sendToHub(msg);
 }
 
@@ -84,6 +113,7 @@ function handleMessage(msg) {
     case 'full-state':
       renderSections(msg.data.sections);
       updateVerdict(msg.data.verdict);
+      updateBias(msg.data.bias, msg.data.mode);
       document.getElementById('poLocked').classList.toggle('on', !!msg.data.locked);
       break;
 
@@ -94,7 +124,46 @@ function handleMessage(msg) {
     case 'verdict-update':
       updateVerdict(msg.data);
       break;
+
+    case 'bias-update':
+      updateBias(msg.data.bias, msg.data.mode);
+      break;
   }
+}
+
+// ══════════════════════════════════════════════════════
+// Bias & Mode Display
+// ══════════════════════════════════════════════════════
+function updateBias(bias, mode) {
+  const biasVal = document.getElementById('poBiasVal');
+  const modeVal = document.getElementById('poModeVal');
+  const biasWrap = document.getElementById('poBias');
+
+  // Bias
+  if (bias === 'bull') {
+    biasVal.textContent = '▲ Bullish';
+    biasVal.className = 'po-bias-val bull';
+  } else if (bias === 'bear') {
+    biasVal.textContent = '▼ Bearish';
+    biasVal.className = 'po-bias-val bear';
+  } else {
+    biasVal.textContent = 'Complete analysis to display';
+    biasVal.className = 'po-bias-val po-dim';
+  }
+
+  // Mode
+  if (mode === 'trend') {
+    modeVal.textContent = '⟿ Trending';
+    modeVal.className = 'po-bias-val trend';
+  } else if (mode === 'range') {
+    modeVal.textContent = '⟷ Ranging';
+    modeVal.className = 'po-bias-val range';
+  } else {
+    modeVal.textContent = '—';
+    modeVal.className = 'po-bias-val po-dim';
+  }
+
+  // Always visible — show placeholder text when no data
 }
 
 // ══════════════════════════════════════════════════════
@@ -113,7 +182,6 @@ function renderSections(sections) {
 
     const checkedCount = sec.items.filter(i => i.checked).length;
 
-    // Section header
     const hdr = document.createElement('div');
     hdr.className = 'po-sec-hdr';
     hdr.innerHTML =
@@ -124,7 +192,6 @@ function renderSections(sections) {
     hdr.addEventListener('click', () => div.classList.toggle('open'));
     div.appendChild(hdr);
 
-    // Section body
     const body = document.createElement('div');
     body.className = 'po-sec-body';
 
@@ -180,7 +247,6 @@ function updateVerdict(v) {
   const verdictWrap = document.getElementById('poVerdictBar');
   const pct = parseInt(v.pct) || 0;
 
-  // Color tier based on percentage
   let color, tierClass;
   if (pct >= 87) { color = '#15e89a'; tierClass = 'green'; }
   else if (pct >= 65) { color = '#ffad14'; tierClass = 'amber'; }

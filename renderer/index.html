@@ -15,17 +15,33 @@
   <span class="po-badge">OVERLAY</span>
   <span class="po-locked" id="poLocked">LOCKED</span>
   <div class="po-titlebar-btns">
-    <button class="po-pin on" id="poPin" onclick="window.electronAPI.toggleAlwaysOnTop()" title="Always on top (active)">📌</button>
-    <button class="po-tbtn" onclick="window.electronAPI.minimize()" title="Minimize">─</button>
-    <button class="po-tbtn po-close" onclick="window.electronAPI.close()" title="Close">✕</button>
+    <button class="po-pin on" id="poPin" title="Always on top (active)">📌</button>
+    <button class="po-tbtn po-settings-btn" id="poSettingsBtn" title="Settings">⚙</button>
+    <button class="po-tbtn" id="poMinimize" title="Minimize">─</button>
+    <button class="po-tbtn po-close" id="poClose" title="Close">✕</button>
   </div>
 </div>
 
-<!-- ── Opacity control ── -->
-<div class="po-opacity-wrap">
-  <span class="po-opacity-label">Opacity</span>
-  <input type="range" class="po-opacity-slider" min="30" max="100" value="100"
-    oninput="window.electronAPI.setOpacity(this.value / 100)" />
+<!-- ── Settings dropdown ── -->
+<div class="po-settings" id="poSettings">
+  <div class="po-settings-row">
+    <span class="po-settings-label">Opacity</span>
+    <input type="range" class="po-opacity-slider" id="poOpacity" min="30" max="100" value="100" />
+    <span class="po-opacity-val" id="poOpacityVal">100%</span>
+  </div>
+</div>
+
+<!-- ── Bias display ── -->
+<div class="po-bias" id="poBias">
+  <div class="po-bias-item" id="poBiasTag">
+    <span class="po-bias-label">BIAS</span>
+    <span class="po-bias-val po-dim" id="poBiasVal">Complete analysis to display</span>
+  </div>
+  <div class="po-bias-sep"></div>
+  <div class="po-bias-item" id="poModeTag">
+    <span class="po-bias-label">MODE</span>
+    <span class="po-bias-val po-dim" id="poModeVal">—</span>
+  </div>
 </div>
 
 <!-- ── Connection status ── -->

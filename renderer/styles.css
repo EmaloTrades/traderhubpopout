@@ -16,7 +16,7 @@ body::-webkit-scrollbar-thumb { background: #223040; border-radius: 2px; }
 
 /* ── Custom titlebar ── */
 .po-titlebar {
-  -webkit-app-region: drag; /* makes titlebar draggable */
+  -webkit-app-region: drag;
   position: sticky; top: 0; z-index: 100;
   background: #080b12; border-bottom: 1px solid #192030;
   padding: 6px 10px; display: flex; align-items: center; gap: 6px;
@@ -40,7 +40,7 @@ body::-webkit-scrollbar-thumb { background: #223040; border-radius: 2px; }
 .po-locked.on { display: inline-block; }
 
 .po-titlebar-btns {
-  -webkit-app-region: no-drag; /* buttons must be clickable */
+  -webkit-app-region: no-drag;
   margin-left: auto; display: flex; gap: 4px;
 }
 .po-tbtn {
@@ -60,6 +60,65 @@ body::-webkit-scrollbar-thumb { background: #223040; border-radius: 2px; }
 .po-pin:hover { color: #7a90a8; border-color: #304050; }
 .po-pin.on { background: rgba(168,85,247,.12); border-color: #a855f7; color: #a855f7; }
 
+/* ── Settings cog ── */
+.po-settings-btn { font-size: 11px; }
+.po-settings-btn.active { background: rgba(168,85,247,.12); border-color: #a855f7; color: #a855f7; }
+
+/* ── Settings dropdown ── */
+.po-settings {
+  display: none; background: #0d1018;
+  border-bottom: 1px solid #192030; padding: 8px 10px;
+}
+.po-settings.open { display: block; }
+.po-settings-row {
+  display: flex; align-items: center; gap: 8px;
+}
+.po-settings-label {
+  font-size: 8px; color: #304050; letter-spacing: .08em;
+  text-transform: uppercase; min-width: 42px;
+}
+.po-opacity-slider {
+  flex: 1; -webkit-appearance: none; height: 2px;
+  background: #192030; border-radius: 1px; outline: none;
+}
+.po-opacity-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 10px; height: 10px;
+  background: #a855f7; border-radius: 50%; cursor: pointer;
+}
+.po-opacity-val {
+  font-size: 8px; color: #7a90a8; letter-spacing: .04em;
+  min-width: 28px; text-align: right;
+}
+
+/* ── Bias display ── */
+.po-bias {
+  display: flex; align-items: center; gap: 0;
+  padding: 5px 10px; border-bottom: 1px solid #12161e;
+  background: #0b0e15;
+}
+.po-bias-val.po-dim { color: #304050; font-family: 'DM Mono', monospace; font-size: 8px; font-weight: 400; letter-spacing: .04em; text-transform: none; }
+.po-bias-item {
+  display: flex; align-items: center; gap: 5px;
+  flex: 1;
+}
+.po-bias-sep {
+  width: 1px; height: 14px; background: #192030; margin: 0 8px;
+}
+.po-bias-label {
+  font-size: 7px; color: #304050; letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.po-bias-val {
+  font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 700;
+  color: #7a90a8; letter-spacing: .04em; text-transform: uppercase;
+}
+
+/* Bias color states */
+.po-bias-val.bull { color: #15e89a; }
+.po-bias-val.bear { color: #ff3554; }
+.po-bias-val.trend { color: #38bdf8; }
+.po-bias-val.range { color: #ffad14; }
+
 /* ── Connection status ── */
 .po-status {
   padding: 3px 10px; display: flex; align-items: center; gap: 6px;
@@ -72,18 +131,6 @@ body::-webkit-scrollbar-thumb { background: #223040; border-radius: 2px; }
 }
 .po-status-dot.connected { background: #15e89a; }
 #poStatusText { font-size: 8px; color: #304050; letter-spacing: .06em; }
-
-/* ── Opacity slider ── */
-.po-opacity-wrap { padding: 4px 10px 2px; display: flex; align-items: center; gap: 6px; }
-.po-opacity-label { font-size: 8px; color: #304050; letter-spacing: .08em; text-transform: uppercase; }
-.po-opacity-slider {
-  flex: 1; -webkit-appearance: none; height: 2px;
-  background: #192030; border-radius: 1px; outline: none;
-}
-.po-opacity-slider::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 8px; height: 8px;
-  background: #a855f7; border-radius: 50%; cursor: pointer;
-}
 
 /* ── Empty state ── */
 .po-empty {
