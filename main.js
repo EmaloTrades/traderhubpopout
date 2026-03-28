@@ -126,7 +126,7 @@ function createWindow() {
     transparent: false,
     resizable: true,
     skipTaskbar: false,     // keep in taskbar so user can find it
-    title: 'Trader Hub Checklist',
+    title: 'Trader Hub Pop-Out Checklist',
     backgroundColor: '#0a0d14',
     webPreferences: {
       // ── SECURITY ──

@@ -19,7 +19,7 @@
   },
   "build": {
     "appId": "com.traderhub.popout",
-    "productName": "Trader Hub Checklist",
+    "productName": "Trader Hub Pop-Out Checklist",
     "win": {
       "target": "portable",
       "icon": "icon.ico"
