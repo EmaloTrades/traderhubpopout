@@ -120,6 +120,7 @@ function createWindow() {
     x: undefined, // OS decides initial position
     y: undefined,
     alwaysOnTop: true,
+    alwaysOnTopLevel: 'floating',
     frame: false,           // frameless for compact overlay look
     icon: path.join(__dirname, 'icon.ico'),
     transparent: false,
@@ -177,7 +178,11 @@ function createWindow() {
     if (action === 'close') mainWindow.close();
     if (action === 'toggle-top') {
       const isTop = mainWindow.isAlwaysOnTop();
-      mainWindow.setAlwaysOnTop(!isTop);
+      if (isTop) {
+        mainWindow.setAlwaysOnTop(false);
+      } else {
+        mainWindow.setAlwaysOnTop(true, 'floating');
+      }
       event.reply('always-on-top-changed', !isTop);
     }
   });
