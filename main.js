@@ -171,29 +171,42 @@ function createWindow() {
 
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
 
-  // ── Window drag support (frameless window) ──
-  ipcMain.on('window-drag', (event, action) => {
-    if (!mainWindow) return;
-    if (action === 'minimize') mainWindow.minimize();
-    if (action === 'close') mainWindow.close();
-    if (action === 'toggle-top') {
+  mainWindow.on('closed', () => { mainWindow = null; });
+}
+
+// ══════════════════════════════════════════════════════
+// IPC Handlers — registered once, outside createWindow
+// ══════════════════════════════════════════════════════
+ipcMain.on('window-action', (event, action) => {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  switch (action) {
+    case 'minimize':
+      mainWindow.minimize();
+      break;
+    case 'close':
+      mainWindow.close();
+      break;
+    case 'toggle-top': {
       const isTop = mainWindow.isAlwaysOnTop();
       if (isTop) {
         mainWindow.setAlwaysOnTop(false);
       } else {
         mainWindow.setAlwaysOnTop(true, 'floating');
       }
-      event.reply('always-on-top-changed', !isTop);
+      mainWindow.webContents.send('always-on-top-changed', !isTop);
+      break;
     }
-  });
+  }
+});
 
-  // ── Forward renderer messages to WS clients ──
-  ipcMain.on('ws-send', (event, msg) => {
-    broadcastToWS(msg);
-  });
+ipcMain.on('set-opacity', (event, value) => {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  mainWindow.setOpacity(Math.max(0.3, Math.min(1, value)));
+});
 
-  mainWindow.on('closed', () => { mainWindow = null; });
-}
+ipcMain.on('ws-send', (event, msg) => {
+  broadcastToWS(msg);
+});
 
 // ══════════════════════════════════════════════════════
 // App Lifecycle

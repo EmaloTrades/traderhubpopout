@@ -25,7 +25,7 @@
 <div class="po-opacity-wrap">
   <span class="po-opacity-label">Opacity</span>
   <input type="range" class="po-opacity-slider" min="30" max="100" value="100"
-    oninput="document.body.style.opacity = this.value / 100" />
+    oninput="window.electronAPI.setOpacity(this.value / 100)" />
 </div>
 
 <!-- ── Connection status ── -->
