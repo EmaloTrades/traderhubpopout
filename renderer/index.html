@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; connect-src 'self' ws://127.0.0.1:19384;">
+<title>Trader Hub Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ── Custom titlebar (frameless window) ── -->
+<div class="po-titlebar" id="titlebar">
+  <span class="po-title">Checklist</span>
+  <span class="po-badge">OVERLAY</span>
+  <span class="po-locked" id="poLocked">LOCKED</span>
+  <div class="po-titlebar-btns">
+    <button class="po-pin on" id="poPin" onclick="window.electronAPI.toggleAlwaysOnTop()" title="Always on top (active)">📌</button>
+    <button class="po-tbtn" onclick="window.electronAPI.minimize()" title="Minimize">─</button>
+    <button class="po-tbtn po-close" onclick="window.electronAPI.close()" title="Close">✕</button>
+  </div>
+</div>
+
+<!-- ── Opacity control ── -->
+<div class="po-opacity-wrap">
+  <span class="po-opacity-label">Opacity</span>
+  <input type="range" class="po-opacity-slider" min="30" max="100" value="100"
+    oninput="document.body.style.opacity = this.value / 100" />
+</div>
+
+<!-- ── Connection status ── -->
+<div class="po-status" id="poStatus">
+  <span class="po-status-dot" id="poStatusDot"></span>
+  <span id="poStatusText">Connecting to Trader Hub…</span>
+</div>
+
+<!-- ── Checklist sections ── -->
+<div class="po-sections" id="poSections">
+  <div class="po-empty">
+    <div class="po-empty-icon">📋</div>
+    <div class="po-empty-title">Waiting for Trader Hub</div>
+    <div class="po-empty-msg">Open Trader Hub in your browser and navigate to the checklist. This overlay will sync automatically.</div>
+  </div>
+</div>
+
+<!-- ── Verdict bar ── -->
+<div class="po-verdict dim" id="poVerdictBar">
+  <span class="po-pct" id="poPct">0%</span>
+  <div class="po-bar"><div class="po-bar-fill" id="poBarFill"></div></div>
+  <span class="po-vtext" id="poVerdict">—</span>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

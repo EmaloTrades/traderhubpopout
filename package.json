@@ -1,0 +1,35 @@
+{
+  "name": "trader-hub-popout",
+  "version": "1.0.0",
+  "description": "Always-on-top checklist overlay for Trader Hub",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win portable"
+  },
+  "author": "EMALoTrades",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "build": {
+    "appId": "com.traderhub.popout",
+    "productName": "Trader Hub Checklist",
+    "win": {
+      "target": "portable",
+      "icon": "icon.ico"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "icon.ico",
+      "icon.png"
+    ]
+  }
+}
