@@ -7,8 +7,8 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const { WebSocketServer, WebSocket } = require('ws');
 
-// ── Security: disable hardware acceleration to reduce attack surface ──
-app.disableHardwareAcceleration();
+// ── Hardware acceleration enabled for faster launch ──
+// Localhost-only app with no external content — GPU attack surface is minimal.
 
 // ── Prevent multiple instances ──
 const gotLock = app.requestSingleInstanceLock();
@@ -128,6 +128,7 @@ function createWindow() {
     skipTaskbar: false,     // keep in taskbar so user can find it
     title: 'Trader Hub Pop-Out Checklist',
     backgroundColor: '#0a0d14',
+    show: false,            // don't show until ready — eliminates white flash
     webPreferences: {
       // ── SECURITY ──
       nodeIntegration: false,        // no require() in renderer
@@ -140,6 +141,11 @@ function createWindow() {
       enableBlinkFeatures: '',       // no experimental features
       spellcheck: false,
     },
+  });
+
+  // ── Show window as soon as DOM is painted (faster perceived launch) ──
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
   });
 
   // ── Security: strict CSP ──
@@ -212,8 +218,9 @@ ipcMain.on('ws-send', (event, msg) => {
 // App Lifecycle
 // ══════════════════════════════════════════════════════
 app.whenReady().then(() => {
-  startWSServer();
+  // Show window first, start WebSocket in background for faster perceived launch
   createWindow();
+  setImmediate(() => startWSServer());
 });
 
 app.on('window-all-closed', () => {

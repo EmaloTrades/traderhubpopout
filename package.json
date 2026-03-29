@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder --win portable"
+    "build": "electron-builder --win nsis",
+    "build:portable": "electron-builder --win portable"
   },
   "author": "EMALoTrades",
   "license": "UNLICENSED",
@@ -22,9 +23,22 @@
     "productName": "Trader Hub Pop-Out Checklist",
     "forceCodeSigning": false,
     "win": {
-      "target": "portable",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
       "icon": "icon.ico",
       "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Trader Hub Pop-Out"
     },
     "files": [
       "main.js",
